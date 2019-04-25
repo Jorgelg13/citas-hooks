@@ -8,6 +8,9 @@ function Cita(props){
       <p>Fecha: <span>{props.cita.fecha}</span></p>
       <p>Hora: <span>{props.cita.hora}</span></p>
       <p>Sintomas: <span>{props.cita.sintomas}</span></p>
+      <button 
+        onClick={ () => props.eliminarCita(props.index)}
+        type="button" className="button eliminar u-full-width">Eliminar</button>
     </div>
   )
 }
@@ -95,22 +98,28 @@ function Formulario(props) {
   )
 }
 
-
 function App() {
-  //useState retorna dos funciones
-  //el state actual = this.state
-  // funcion que actualiza el state this.setstate()
-
-  const [citas, guardarCita] = useState([]);
-
-  //agregar nuevas citas al state
-  const crearCita = cita =>{
+    //useState retorna dos funciones
+    //el state actual = this.state
+    // funcion que actualiza el state this.setstate()
+    const [citas, guardarCita] = useState([]);
+    //agregar nuevas citas al state
+    const crearCita = cita =>{
     //tomar una copia del statie y agregar el nuevo cliente
     const nuevasCitas =[...citas,cita]
-
     //se almacena en el state
     guardarCita(nuevasCitas);
   }
+
+  //elimina las citas del state
+  const eliminarCita  = (index) => {
+      const nuevasCitas = [...citas];
+      nuevasCitas.splice(index,1);
+      guardarCita(nuevasCitas);
+  }
+
+  //cargar condicionalmente un titulo
+  const titulo = Object.keys(citas).length === 0 ?  'No hay citas' : 'Administrador de citas';
 
   return (
     <Fragment>
@@ -123,11 +132,13 @@ function App() {
             />
           </div>
           <div className="one-half column">
+           <h2>{titulo}</h2>
             {citas.map((cita,index) =>(
               <Cita
                 key={index}
                 index ={index}
                 cita ={cita}
+                eliminarCita ={eliminarCita}
               />
             ))}
           </div>
